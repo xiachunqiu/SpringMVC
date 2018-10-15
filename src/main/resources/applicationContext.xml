@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p">
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="initialSize" value="10"/>
+        <property name="maxActive" value="200"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxIdle" value="20"/>
+        <property name="maxWait" value="60000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="180"/>
+        <property name="logAbandoned" value="true"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.autoReconnect">true</prop>
+                <prop key="hibernate.query.factory_class">${hibernate.query.factory_class}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
+                <prop key="Hibernate.default_batch_fetch_size">${hibernate.default_batch_fetch_size}</prop>
+            </props>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>com.x.y.domain</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <tx:method name="*" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="point-cut" expression="execution(* com.x.y..*Service.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="point-cut" order="1"/>
+    </aop:config>
+    <tx:annotation-driven proxy-target-class="true"/>
+    <bean id="hibernateDataDAO" class="com.x.y.common.HibernateDataDAOImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="300"/>
+        <property name="maxIdle" value="100"/>
+        <property name="minIdle" value="30"/>
+        <property name="maxWaitMillis" value="15000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="numTestsPerEvictionRun" value="30"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+    </bean>
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          destroy-method="destroy">
+        <property name="hostName" value="${redisHost}"/>
+        <property name="port" value="${redisPort}"/>
+        <property name="timeout" value="15000"/>
+        <property name="database" value="1"/>
+        <property name="usePool" value="true"/>
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connection-factory-ref="jedisConnectionFactory">
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+    </bean>
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+          p:connection-factory-ref="jedisConnectionFactory"/>
+</beans>

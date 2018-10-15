@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="OFF" monitorInterval="600">
+    <Properties>
+        <Property name="LOG_HOME">${sys:catalina.home}</Property>
+        <property name="FILE_NAME">xiachunqiu_log</property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="utf-8"
+                           pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} line:%L method:%M - %msg%xEx%n%n"/>
+        </Console>
+        <RollingRandomAccessFile name="INFO" fileName="${LOG_HOME}/logs/${FILE_NAME}-INFO.log"
+                                 filePattern="${LOG_HOME}/log/${FILE_NAME}-INFO_%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="utf-8"
+                           pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="50MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="ERROR" fileName="${LOG_HOME}/logs/${FILE_NAME}-ERROR.log"
+                                 filePattern="${LOG_HOME}/log/${FILE_NAME}-ERROR_%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="FATAL" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="utf-8"
+                           pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="50MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="FATAL" fileName="${LOG_HOME}/logs/${FILE_NAME}-FATAL.log"
+                                 filePattern="${LOG_HOME}/log/${FILE_NAME}-FATAL%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="utf-8"
+                           pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="50MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="ALL" fileName="${LOG_HOME}/logs/${FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/log/${FILE_NAME}%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="utf-8"
+                           pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} line:%L method:%M - %msg%xEx%n%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="50MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingRandomAccessFile>
+        <Async name="Async">
+            <AppenderRef ref="ALL"/>
+            <Appender-Ref ref="Console"/>
+            <Appender-Ref ref="INFO"/>
+            <Appender-Ref ref="ERROR"/>
+            <Appender-Ref ref="FATAL"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework" level="warn" additivity="true"/>
+        <Logger name="org.hibernate" level="warn" additivity="true"/>
+        <Logger name="org.hibernate.tool.hbm2ddl" level="info" additivity="true"/>
+        <Logger name="com.googlecode.hibernate" level="warn" additivity="true"/>
+        <Logger name="org.springframework.web.servlet" level="warn" additivity="true"/>
+        <Logger name="com.alibaba.dubbo" level="warn" additivity="true"/>
+        <Logger name="org.apache.zookeeper.ZooKeeper" level="warn" additivity="true"/>
+        <Root level="INFO">
+            <Appender-Ref ref="Console"/>
+            <Appender-Ref ref="ALL"/>
+        </Root>
+    </Loggers>
+</Configuration>
