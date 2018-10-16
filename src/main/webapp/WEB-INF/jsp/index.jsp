@@ -8,6 +8,7 @@
 <h2>Hello World</h2>
 <button id="export">导出excel测试</button>
 <button id="addJob">addJob</button>
+<button id="qrCode">qrCode</button>
 </body>
 </html>
 <script>
@@ -24,6 +25,10 @@
 
             }
         });
+        return false;
+    });
+    $("#qrCode").click(function () {
+        window.open(contextPath + '/index/getQRCode');
         return false;
     });
 </script>

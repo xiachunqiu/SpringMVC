@@ -20,12 +20,4 @@ public class Rtn implements Serializable {
         this.value = value;
         this.des = des;
     }
-
-    public static Rtn success(String des) {
-        return new Rtn(ReturnValueType.success, des);
-    }
-
-    public static Rtn fail(String des) {
-        return new Rtn(ReturnValueType.fail, des);
-    }
 }

@@ -7,6 +7,7 @@ import com.x.y.common.ViewExcel;
 import com.x.y.domain.User;
 import com.x.y.processor.IProcesser;
 import com.x.y.timer.TestTimer;
+import com.x.y.utils.QRCodeUtils;
 import com.x.y.utils.StringUtils;
 import com.x.y.utils.TimerTaskUtils;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,6 +50,17 @@ public class IndexController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/getQRCode", method = RequestMethod.GET)
+    public void getQRCode(HttpServletResponse response) {
+        try {
+            response.setContentType("image/png");
+            QRCodeUtils.writeToStream("123", response.getOutputStream());
+        } catch (Exception e) {
+            log.error("获取二维码失败！", e);
+            throw new RuntimeException("显示图片出错", e);
+        }
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public Rtn login(String username, String password, HttpServletRequest request) {
@@ -58,6 +71,7 @@ public class IndexController extends BaseController {
         } catch (Exception e) {
             rtn.setValue(ReturnValueType.fail);
             rtn.setDes(e.getMessage());
+
         }
         return rtn;
     }
