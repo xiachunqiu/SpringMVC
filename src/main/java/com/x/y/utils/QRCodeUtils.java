@@ -10,6 +10,9 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 
 public class QRCodeUtils {
+    private QRCodeUtils() {
+    }
+
     public static void writeToStream(String content, OutputStream outputStream) throws Exception {
         int width = 300;
         int height = 300;

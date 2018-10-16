@@ -11,8 +11,11 @@ import java.net.URL;
 import java.util.Properties;
 
 @Log4j2
-public abstract class ConfigProps {
+public class ConfigProps {
     private static Props props;
+
+    private ConfigProps() {
+    }
 
     public static void init() {
         props = new Props();

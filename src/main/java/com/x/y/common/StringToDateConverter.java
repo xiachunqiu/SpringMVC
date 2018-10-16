@@ -14,14 +14,10 @@ public class StringToDateConverter implements Converter<String, Date> {
     private List<String> dateFormatList = new ArrayList<>();
     private final ThreadLocal<List<String>> formatListLocal = new ThreadLocal<>();
 
-    public StringToDateConverter() {
-    }
-
     private void initFormat() {
         if (this.formatListLocal.get() == null) {
             this.formatListLocal.set(this.getDateFormatList());
         }
-
         List<String> dateFormatListTemp = this.formatListLocal.get();
         dateFormatListTemp.add("yyyy-MM-dd HH:mm:ss");
         dateFormatListTemp.add("yyyy-MM-dd");

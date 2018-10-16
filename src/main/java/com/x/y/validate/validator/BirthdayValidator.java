@@ -7,8 +7,6 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Date;
 
 public class BirthdayValidator implements ConstraintValidator<Birthday, Date> {
-    private Date now = new Date();
-
     public void initialize(Birthday birthday) {
     }
 
@@ -16,6 +14,6 @@ public class BirthdayValidator implements ConstraintValidator<Birthday, Date> {
         if (value == null) {
             return true;
         }
-        return !value.after(now);
+        return !value.after(new Date());
     }
 }

@@ -28,6 +28,9 @@ import java.util.Map;
 
 @Log4j2
 public class HttpUtils {
+    private HttpUtils() {
+    }
+
     /**
      * 发送一个 GET 请求
      */

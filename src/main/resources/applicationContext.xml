@@ -44,6 +44,7 @@
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
                 <prop key="Hibernate.default_batch_fetch_size">${hibernate.default_batch_fetch_size}</prop>
             </props>
@@ -71,6 +72,7 @@
     <bean id="hibernateDataDAO" class="com.x.y.common.HibernateDataDAOImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    <!-- redis -->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="300"/>
         <property name="maxIdle" value="100"/>
@@ -109,4 +111,49 @@
     </bean>
     <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
           p:connection-factory-ref="jedisConnectionFactory"/>
+    <!-- quartz -->
+    <bean id="dataSourceForQuartz" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="filters" value="stat"/>
+        <property name="maxActive" value="600"/>
+        <property name="initialSize" value="30"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="20"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="180"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="connectionProperties" value="druid.stat.slowSqlMillis=3000"/>
+    </bean>
+    <bean id="schedulerFactoryBeans" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">
+        <property name="dataSource" ref="dataSourceForQuartz"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="startupDelay" value="120"/>
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.jobStore.class">
+                    org.quartz.impl.jdbcjobstore.JobStoreTX
+                </prop>
+            </props>
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+    </bean>
+    <!-- ThreadPool -->
+    <bean id="threadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="8"/>
+        <property name="maxPoolSize" value="16"/>
+        <property name="queueCapacity" value="200"/>
+        <property name="keepAliveSeconds" value="300"/>
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
 </beans>

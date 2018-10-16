@@ -5,8 +5,14 @@ import com.x.y.common.ReturnValueType;
 import com.x.y.common.Rtn;
 import com.x.y.common.ViewExcel;
 import com.x.y.domain.User;
+import com.x.y.processor.IProcesser;
+import com.x.y.timer.TestTimer;
 import com.x.y.utils.StringUtils;
+import com.x.y.utils.TimerTaskUtils;
 import lombok.extern.log4j.Log4j2;
+import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,16 +30,18 @@ import java.util.*;
 @RequestMapping("/index")
 @Log4j2
 public class IndexController extends BaseController {
+    @Qualifier("schedulerFactoryBeans")
+    @Autowired
+    private Scheduler scheduler;
+
     @RequestMapping(value = "indexHome", method = RequestMethod.GET)
     public ModelAndView indexHome(HttpServletRequest request) {
-        long c = super.getCommonMongodbService().getTodayTaskRecordRepository().count();
-        super.getCommonMongodbService().getCommonMongodbDao().save("");
-        System.out.println(c);
         User user = currentUser();
         if (user == null) {
             ModelMap modelMap = new ModelMap();
             return new ModelAndView("/login", modelMap);
         } else {
+            super.getThreadPool().execute(new Thread(() -> TimerTaskUtils.run(new TestTimer(), 10000)));
             ModelMap modelMap = new ModelMap();
             request.getSession().setAttribute("user", user);
             return new ModelAndView("/index", modelMap);
@@ -69,10 +78,41 @@ public class IndexController extends BaseController {
                 User info = (User) u;
                 return new String[]{idx + 1 + "", info.getRealName(), info.getAddress()};
             }).titles(new String[]{"序号", "姓名", "地址"});
-            map.put(ViewExcel.MODEL_ATTR_NAME, viewMode);
+            map.put(Constants.EXCEL_VIEW_MODEL_KEY, viewMode);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ModelAndView(new ViewExcel(), map);
+    }
+
+    @RequestMapping(value = "addJob", method = RequestMethod.GET)
+    public Rtn addJob() {
+        Rtn rtn = new Rtn(ReturnValueType.success, "成功");
+        try {
+            String jobClassName = "com.x.y.processor.TestProcessor";
+            String jobName = jobClassName.substring(jobClassName.lastIndexOf(".") + 1);
+            String triggerName = jobName + "Trigger";
+            String cronExpression = "0 0/1 * * * ? *";
+            String description = "测试定时任务每分钟执行";
+            String jobGroupName = Scheduler.DEFAULT_GROUP;
+            scheduler.start();
+            JobDetail jobDetail = JobBuilder.newJob(getClass(jobClassName).getClass()).withIdentity(jobName, jobGroupName)
+                    .withDescription(description).build();
+            TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
+            triggerBuilder.withIdentity(triggerName);
+            triggerBuilder.startNow();
+            triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(URLDecoder.decode(cronExpression, "utf-8")));
+            CronTrigger trigger = (CronTrigger) triggerBuilder.build();
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (Exception e) {
+            rtn.setValue(ReturnValueType.fail);
+            rtn.setDes(e.getMessage());
+        }
+        return rtn;
+    }
+
+    private static IProcesser getClass(String classname) throws Exception {
+        Class<?> class1 = Class.forName(classname);
+        return (IProcesser) class1.newInstance();
     }
 }

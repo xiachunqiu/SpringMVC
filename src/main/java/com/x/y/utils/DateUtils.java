@@ -98,7 +98,7 @@ public final class DateUtils {
     public static long getDifferHours(Date startdate, Date enddate) {
         Calendar[] cal = new Calendar[2];
         Date[] d = new Date[]{enddate, startdate};
-        for(int i = 0; i < cal.length; ++i) {
+        for (int i = 0; i < cal.length; ++i) {
             cal[i] = Calendar.getInstance();
             cal[i].setTime(d[i]);
             cal[i].set(Calendar.HOUR_OF_DAY, 0);
@@ -107,6 +107,6 @@ public final class DateUtils {
         }
         long m = cal[0].getTime().getTime();
         long n = cal[1].getTime().getTime();
-        return (long)((int)Math.abs((m - n) / 1000L / 3600L / 24L));
+        return (long) ((int) Math.abs((m - n) / 1000L / 3600L / 24L));
     }
 }

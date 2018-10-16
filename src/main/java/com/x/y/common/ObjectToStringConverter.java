@@ -1,15 +1,13 @@
 package com.x.y.common;
 
 import java.util.Date;
+
 import org.springframework.core.convert.converter.Converter;
 import com.x.y.utils.DateUtils;
 import com.x.y.utils.StringUtils;
 
 public class ObjectToStringConverter implements Converter<Object, String> {
     private String outputDatePattern;
-
-    public ObjectToStringConverter() {
-    }
 
     public String convert(Object object) {
         if (object == null) {
@@ -18,7 +16,7 @@ public class ObjectToStringConverter implements Converter<Object, String> {
             if (StringUtils.isNull(this.outputDatePattern)) {
                 this.outputDatePattern = "yyyy-MM-dd HH:mm:ss";
             }
-            return DateUtils.format(this.outputDatePattern, (Date)object);
+            return DateUtils.format(this.outputDatePattern, (Date) object);
         } else {
             return object.toString();
         }

@@ -8,6 +8,7 @@ import com.x.y.service.RedisService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import com.x.y.service.CommonService;
 
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 public class BaseController {
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPool;
     @Autowired
     private CommonService commonService;
     @Autowired

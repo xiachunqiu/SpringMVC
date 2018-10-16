@@ -10,9 +10,6 @@ public class Pager implements Serializable {
     private boolean havePrePage;
     private int pageNo;
 
-    public Pager() {
-    }
-
     public Pager(int recordCount, int pageSize) {
         if (pageSize == 0) {
             pageSize = 1;

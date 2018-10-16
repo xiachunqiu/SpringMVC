@@ -16,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewExcel extends AbstractExcelView {
-    public static final String MODEL_ATTR_NAME = "modelname";
-
     @Override
     protected void buildExcelDocument(Map<String, Object> obj, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        ExcelViewModel viewMode = (ExcelViewModel) obj.get(MODEL_ATTR_NAME);
+        ExcelViewModel viewMode = (ExcelViewModel) obj.get(Constants.EXCEL_VIEW_MODEL_KEY);
         for (ExcelViewModelSheetData sheetData : viewMode.sheets) {
             int rowIndex = 0;
             HSSFSheet sheet = workbook.createSheet(sheetData.name); // sheet
