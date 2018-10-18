@@ -4,7 +4,6 @@ package com.x.y.controller;
 import com.x.y.common.Constants;
 import com.x.y.domain.User;
 import com.x.y.mongodb.service.CommonMongodbService;
-import com.x.y.service.RedisService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class BaseController {
     private ThreadPoolTaskExecutor threadPool;
     @Autowired
     private CommonService commonService;
-    @Autowired
-    private RedisService redisService;
     @Autowired
     private CommonMongodbService commonMongodbService;
 
