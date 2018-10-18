@@ -38,6 +38,7 @@ public class IndexController extends BaseController {
 
     @RequestMapping(value = "indexHome", method = RequestMethod.GET)
     public ModelAndView indexHome(HttpServletRequest request) {
+        System.out.println(super.getCommonService().getClass());
         User user = currentUser();
         if (user == null) {
             ModelMap modelMap = new ModelMap();

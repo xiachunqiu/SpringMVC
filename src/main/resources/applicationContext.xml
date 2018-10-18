@@ -6,10 +6,12 @@
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
                            http://www.springframework.org/schema/aop
-                           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+                           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:p="http://www.springframework.org/schema/p">
+       xmlns:context="http://www.springframework.org/schema/context">
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -18,8 +20,9 @@
         </property>
     </bean>
     <!-- dataSource -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driver}"/>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
@@ -32,12 +35,16 @@
         <property name="testWhileIdle" value="true"/>
         <property name="testOnBorrow" value="true"/>
         <property name="testOnReturn" value="true"/>
+        <!-- 超过时间限制是否回收 -->
         <property name="removeAbandoned" value="true"/>
+        <!-- 超时时间；单位为秒。180秒=3分钟 -->
         <property name="removeAbandonedTimeout" value="180"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
         <property name="logAbandoned" value="true"/>
     </bean>
     <!-- sessionFactory -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="hibernateProperties">
             <props>
@@ -53,12 +60,13 @@
         </property>
         <property name="packagesToScan">
             <list>
-                <value>com.x.y.domain</value>
+                <value>com.x.y.**.domain</value>
             </list>
         </property>
     </bean>
     <!-- transaction -->
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <tx:advice id="txAdvice">
@@ -67,10 +75,15 @@
         </tx:attributes>
     </tx:advice>
     <aop:config>
-        <aop:pointcut id="point-cut" expression="execution(* com.x.y..*Service.*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="point-cut" order="1"/>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.x.y.service.*Service.*(..))"/>
     </aop:config>
     <tx:annotation-driven proxy-target-class="true"/>
+    <!-- @Controller -->
+    <context:component-scan base-package="com.x.y">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy/>
     <bean id="hibernateDataDAO" class="com.x.y.common.HibernateDataDAOImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
