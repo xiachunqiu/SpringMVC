@@ -145,7 +145,7 @@ public final class StringUtils {
         if (isNull(tag)) {
             return null;
         } else {
-            String[] tags = null;
+            String[] tags;
             tag = tag.trim().replaceAll("，", ",");
             tag = tag.replaceAll("｜", ",");
             tag = tag.replaceAll("\t", ",");
@@ -243,10 +243,8 @@ public final class StringUtils {
     }
 
     public static String[] getParameterValues(HttpServletRequest request, String paramName) {
-        String[] returnValue = null;
         String[] paramValue = request.getParameterValues(paramName);
-        returnValue = paramValue == null ? new String[0] : paramValue;
-        return returnValue;
+        return paramValue == null ? new String[0] : paramValue;
     }
 
     public static String getParameter(HttpServletRequest request, String paraName, String defaultValue) {
