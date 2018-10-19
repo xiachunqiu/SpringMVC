@@ -5,10 +5,8 @@ import com.x.y.common.ReturnValueType;
 import com.x.y.common.Rtn;
 import com.x.y.common.ViewExcel;
 import com.x.y.domain.User;
-import com.x.y.timer.TestTimer;
 import com.x.y.utils.QRCodeUtils;
 import com.x.y.utils.StringUtils;
-import com.x.y.utils.TimerTaskUtils;
 import lombok.extern.log4j.Log4j2;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,6 @@ public class IndexController extends BaseController {
             ModelMap modelMap = new ModelMap();
             return new ModelAndView("/login", modelMap);
         } else {
-            super.getThreadPool().execute(new Thread(() -> TimerTaskUtils.run(new TestTimer(), 10000)));
             ModelMap modelMap = new ModelMap();
             request.getSession().setAttribute("user", user);
             return new ModelAndView("/index", modelMap);
