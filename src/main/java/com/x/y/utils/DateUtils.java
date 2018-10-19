@@ -21,27 +21,6 @@ public final class DateUtils {
         return date;
     }
 
-    public static String format() {
-        return format("yyyy-MM-dd HH:mm:ss");
-    }
-
-    public static String getTablefixByWeek() {
-        Calendar cale = Calendar.getInstance();
-        cale.set(Calendar.DAY_OF_WEEK, 1);
-        return format("yyyyMMdd", cale.getTime());
-    }
-
-    public static String getTablefixByLastWeek() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_WEEK, 1);
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
-        return format("yyyyMMdd", cal.getTime());
-    }
-
-    public static String format(String pattern) {
-        return format(pattern, new Date());
-    }
-
     public static int getYear(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -52,21 +31,8 @@ public final class DateUtils {
         return date == null ? "" : (new SimpleDateFormat(pattern)).format(date);
     }
 
-    public static String format(Date date) {
-        return format("yyyy-MM-dd HH:mm:ss", date);
-    }
-
     public static Date parse(String pattern, String text) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-        if (text != null && text.trim().length() != 0) {
-            return dateFormat.parse(text);
-        } else {
-            throw new ParseException("传入参数：" + text + "有误。", 0);
-        }
-    }
-
-    public static Date parse(String text) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (text != null && text.trim().length() != 0) {
             return dateFormat.parse(text);
         } else {
@@ -87,12 +53,6 @@ public final class DateUtils {
         long from = df.parse(format("yyyy-MM-dd", fromDate)).getTime();
         Long days = (to - from) / 86400000L;
         return days.intValue();
-    }
-
-    public static Date getMonthFirstDay() {
-        Calendar cpcalendar = new GregorianCalendar();
-        cpcalendar.set(Calendar.DATE, 1);
-        return cpcalendar.getTime();
     }
 
     public static long getDifferHours(Date startdate, Date enddate) {

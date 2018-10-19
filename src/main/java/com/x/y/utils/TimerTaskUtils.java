@@ -9,10 +9,6 @@ public class TimerTaskUtils {
     private TimerTaskUtils() {
     }
 
-    public static void run(TimerTask timerTask, long delay, long period) {
-        timer.schedule(timerTask, delay, period);
-    }
-
     public static void run(TimerTask timerTask, long delay) {
         timer.schedule(timerTask, delay);
     }
