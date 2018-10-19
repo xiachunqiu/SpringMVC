@@ -41,15 +41,31 @@ public class CommonService extends BaseService {
         return super.getCommonDao().getListByObj(object, pager, sqlString);
     }
 
+    public List<?> getListByObj(Object object, Pager pager) throws DataAccessException {
+        return super.getCommonDao().getListByObj(object, pager, null);
+    }
+
     public Integer getCountByObj(Object object, String sqlString) throws DataAccessException {
         return super.getCommonDao().getCountByObj(object, sqlString);
+    }
+
+    public Integer getCountByObj(Object object) throws DataAccessException {
+        return super.getCommonDao().getCountByObj(object, null);
     }
 
     public List<?> getListForSearch(Object object, Pager pager, String sqlString) throws DataAccessException {
         return super.getCommonDao().getListForSearch(object, pager, sqlString);
     }
 
+    public List<?> getListForSearch(Object object, Pager pager) throws DataAccessException {
+        return super.getCommonDao().getListForSearch(object, pager, null);
+    }
+
     public Integer getCountForSearch(Object object, String sqlString) throws DataAccessException {
         return super.getCommonDao().getCountForSearch(object, sqlString);
+    }
+
+    public Integer getCountForSearch(Object object) throws DataAccessException {
+        return super.getCommonDao().getCountForSearch(object, null);
     }
 }

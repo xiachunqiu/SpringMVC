@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 @Component
 @Log4j2
-public class TestProcessor extends BaseController implements IProcesser, Job {
+public class TestProcessor extends BaseController implements IProcessor, Job {
     private static TestProcessor testProcesser;
 
     @PostConstruct

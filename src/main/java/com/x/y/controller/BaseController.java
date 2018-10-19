@@ -4,6 +4,7 @@ package com.x.y.controller;
 import com.x.y.common.Constants;
 import com.x.y.domain.User;
 import com.x.y.mongodb.service.CommonMongodbService;
+import com.x.y.processor.IProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,10 @@ public class BaseController {
     User currentUser() {
         Object object = request.getSession().getAttribute(Constants.USER_SESSION_KEY);
         return object == null ? null : (User) object;
+    }
+
+    static IProcessor getClass(String classname) throws Exception {
+        Class<?> class1 = Class.forName(classname);
+        return (IProcessor) class1.newInstance();
     }
 }

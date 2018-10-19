@@ -5,7 +5,6 @@ import com.x.y.common.ReturnValueType;
 import com.x.y.common.Rtn;
 import com.x.y.common.ViewExcel;
 import com.x.y.domain.User;
-import com.x.y.processor.IProcesser;
 import com.x.y.timer.TestTimer;
 import com.x.y.utils.QRCodeUtils;
 import com.x.y.utils.StringUtils;
@@ -124,10 +123,5 @@ public class IndexController extends BaseController {
             rtn.setDes(e.getMessage());
         }
         return rtn;
-    }
-
-    private static IProcesser getClass(String classname) throws Exception {
-        Class<?> class1 = Class.forName(classname);
-        return (IProcesser) class1.newInstance();
     }
 }
