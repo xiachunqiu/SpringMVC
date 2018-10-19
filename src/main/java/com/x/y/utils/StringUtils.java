@@ -368,7 +368,7 @@ public final class StringUtils {
         return result;
     }
 
-    public static String unescape(String src) {
+    private static String unescape(String src) {
         if (isNull(src)) {
             return "";
         } else {

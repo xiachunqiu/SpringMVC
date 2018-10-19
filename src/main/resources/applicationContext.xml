@@ -35,11 +35,8 @@
         <property name="testWhileIdle" value="true"/>
         <property name="testOnBorrow" value="true"/>
         <property name="testOnReturn" value="true"/>
-        <!-- 超过时间限制是否回收 -->
         <property name="removeAbandoned" value="true"/>
-        <!-- 超时时间；单位为秒。180秒=3分钟 -->
         <property name="removeAbandonedTimeout" value="180"/>
-        <!-- 关闭abanded连接时输出错误日志 -->
         <property name="logAbandoned" value="true"/>
     </bean>
     <!-- sessionFactory -->
