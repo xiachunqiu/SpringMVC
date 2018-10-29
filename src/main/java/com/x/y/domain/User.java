@@ -3,9 +3,7 @@ package com.x.y.domain;
 import com.x.y.validate.annotation.Birthday;
 import com.x.y.validate.annotation.CheckString;
 import com.x.y.validate.annotation.MobilePhone;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,12 +11,12 @@ import java.util.Date;
 
 @Entity
 @Table(name = "auth_user")
-@Getter
-@Setter
-@ToString
+@Data
 public class User implements Serializable {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
     @Column(unique = true)
     private String username;
     @CheckString

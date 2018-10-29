@@ -1,27 +1,71 @@
 package com.x.y.utils;
 
-import org.apache.commons.beanutils.BeanMap;
+import com.x.y.domain.User;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.util.Assert;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 public class BeanMapUtils {
     private BeanMapUtils() {
     }
 
-    public static Object mapToBean(Map<String, Object> map, Class<?> beanClass) throws Exception {
+    public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+        Class c = User.class;
+        Field[] fields = c.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getName().equals("id")) {
+                System.out.println(field.getType().equals(Integer.class));
+            }
+        }
+    }
+
+    public static Map<String, Object> getBeanMap(Object o) throws Exception {
+        Assert.isTrue(o != null, "对象为null");
+        Map<String, Object> map = new HashMap<>();
+        Field[] fields = o.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            String name = field.getName();
+            Method m = o.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1));
+            map.put(name, m.invoke(o));
+        }
+        map.put("class", o.getClass());
+        return map;
+    }
+
+    public static <T> T getMapBean(Map<String, Object> map, Class<T> beanClass) throws Exception {
         if (map == null) {
             return null;
         }
-        Object obj = beanClass.newInstance();
-        BeanUtils.populate(obj, map);
-        return obj;
-    }
-
-    public static Map<?, ?> BeanToMap(Object obj) {
-        if (obj == null) {
-            return null;
+        T obj = beanClass.newInstance();
+        try {
+            if (obj != null) {
+                Field[] fields = obj.getClass().getDeclaredFields();
+                for (Object o : map.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
+                    String name = (String) entry.getKey();
+                    if (name != null) {
+                        for (Field field : fields) {
+                            if (name.equals(field.getName())) {
+                                Object[] enums = field.getType().getEnumConstants();
+                                if (enums != null) {
+                                    for (Object e : enums) {
+                                        if (e.toString().equals(entry.getValue())) {
+                                            BeanUtils.setProperty(obj, name, e);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        BeanUtils.setProperty(obj, name, entry.getValue());
+                    }
+                }
+            }
+        } catch (Exception ignored) {
         }
-        return new BeanMap(obj);
+        return obj;
     }
 }
