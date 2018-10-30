@@ -81,7 +81,7 @@ public class IndexController extends BaseController {
         HashMap<String, String> param = new HashMap<>();
         param.put("user_id", clientIdCache);
         param.put("client_type", "web");
-        param.put("ip_address", StringUtils.getIpAddress(request).split(",")[0]);
+        param.put("ip_address", StringUtils.getIpAddress(request));
         int gtResult = gtServerStatusCode == 1 ? gtSdk.enhancedValidateRequest(challenge, validate, secCode, param)
                 : gtSdk.failBackValidateRequest(challenge, validate, secCode);
         Assert.isTrue(gtResult == 1, "验证码已过期，请刷新页面后重试！");
