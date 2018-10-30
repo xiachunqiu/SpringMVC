@@ -1,4 +1,3 @@
-<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -12,7 +11,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/resource/login/css/style.css">
     <style>
         body {
-            background: url("../../resource/login/img/backgrounds/1.jpg") no-repeat;
+            background-color: black;
             background-size: cover;
         }
     </style>
@@ -20,11 +19,16 @@
 <body>
 <div class="page-container">
     <h1>登录</h1>
-    <form action="" method="post" id="loginForm">
+    <form id="loginForm">
         <input type="text" name="username" id="username" class="username" placeholder="登录名">
         <input type="password" name="password" id="password" class="password" placeholder="密码">
+        <div>
+            <br>
+            <div id="captcha">
+                <p id="wait" class="show">正在加载验证码......</p>
+            </div>
+        </div>
         <button type="button" id="submitBtn"> 点击登录</button>
-        <div class="error"><span>+</span></div>
     </form>
 </div>
 <script>
@@ -33,6 +37,7 @@
 <script src="<%=request.getContextPath()%>/resource/login/js/jquery-1.8.2.min.js"></script>
 <script src="<%=request.getContextPath()%>/resource/login/js/supersized.3.2.7.min.js"></script>
 <script src="<%=request.getContextPath()%>/resource/login/js/layui.js"></script>
-<script src="<%=request.getContextPath()%>/resource/login/js/scripts.js?t=<%=new Date().getTime() %>"></script>
+<script src="<%=request.getContextPath()%>/resource/login/js/scripts.js?t=4"></script>
+<script src="<%=request.getContextPath()%>/resource/login/js/gt.js"></script>
 </body>
 </html>

@@ -7,61 +7,61 @@ import net.rubyeye.xmemcached.XMemcachedClientBuilder;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 @Log4j2
-public class MemcachedUtils {
-    private static MemcachedClient memcachedClient = null;
+public class XMemCachedUtils {
+    private static MemcachedClient memCachedClient = null;
 
-    private MemcachedUtils() {
+    private XMemCachedUtils() {
     }
 
     static {
         try {
             MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses("127.0.0.1:11211"));
-            memcachedClient = builder.build();
+            memCachedClient = builder.build();
         } catch (Exception e) {
-            log.error("初始仳memcached出错", e);
+            log.error("初始仳memCachedClient出错", e);
         }
     }
 
     public static void set(String key, int time, Object object) {
         try {
-            if (memcachedClient != null) {
-                memcachedClient.set(key, time, object);
+            if (memCachedClient != null) {
+                memCachedClient.set(key, time, object);
             }
         } catch (Exception e) {
-            log.error("", e);
+            log.error(e);
         }
     }
 
     public static Object get(String key) {
         Object value = null;
         try {
-            if (memcachedClient == null) {
+            if (memCachedClient == null) {
                 return null;
             }
-            value = memcachedClient.get(key);
+            value = memCachedClient.get(key);
         } catch (Exception e) {
-            log.error("", e);
+            log.error(e);
         }
         return value;
     }
 
     public static void delete(String key) {
         try {
-            if (memcachedClient != null) {
-                memcachedClient.delete(key);
+            if (memCachedClient != null) {
+                memCachedClient.delete(key);
             }
         } catch (Exception e) {
-            log.error("", e);
+            log.error(e);
         }
     }
 
     public static void flushAll() {
         try {
-            if (memcachedClient != null) {
-                memcachedClient.flushAll();
+            if (memCachedClient != null) {
+                memCachedClient.flushAll();
             }
         } catch (Exception e) {
-            log.error("", e);
+            log.error(e);
         }
     }
 }

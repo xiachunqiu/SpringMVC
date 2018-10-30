@@ -23,7 +23,7 @@ public class CommonDaoImpl {
         return (T) query.uniqueResult();
     }
 
-    public List<?> getListByObj(Object object, Pager pager, String sqlString) throws DataAccessException {
+    public <T> List<T> getListByObj(T object, Pager pager, String sqlString) throws DataAccessException {
         return DaoCommon.getQueryResult(object, pager, hibernateDataDAO, sqlString);
     }
 

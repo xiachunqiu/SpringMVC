@@ -41,7 +41,7 @@ public class CommonService extends BaseService {
         return super.getCommonDao().getListByObj(object, pager, sqlString);
     }
 
-    public List<?> getListByObj(Object object, Pager pager) throws DataAccessException {
+    public <T> List<T> getListByObj(T object, Pager pager) throws DataAccessException {
         return super.getCommonDao().getListByObj(object, pager, null);
     }
 

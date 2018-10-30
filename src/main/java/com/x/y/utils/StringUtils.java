@@ -9,19 +9,19 @@ public final class StringUtils {
     private StringUtils() {
     }
 
-    public static String chop(String orignalString, int length, String chopedString) {
+    public static String chop(String originalString, int length, String chopString) {
         Float float1 = 0.5F;
-        if (isNull(orignalString)) {
+        if (isNull(originalString)) {
             return "";
         } else {
-            orignalString = orignalString.replaceAll(" ", " ");
+            originalString = originalString.replaceAll(" ", " ");
             StringBuilder buffer = new StringBuilder();
             float count = 0.0F;
-            int stringLength = orignalString.length();
+            int stringLength = originalString.length();
             int i;
             char c;
             for (i = 0; i < stringLength; ++i) {
-                c = orignalString.charAt(i);
+                c = originalString.charAt(i);
                 if (c < 255) {
                     count += float1;
                 } else {
@@ -29,11 +29,11 @@ public final class StringUtils {
                 }
             }
             if (Math.round(count) <= length) {
-                return orignalString;
+                return originalString;
             } else {
                 count = 0.0F;
                 for (i = 0; i < stringLength; ++i) {
-                    c = orignalString.charAt(i);
+                    c = originalString.charAt(i);
                     if (c < 255) {
                         count += float1;
                     } else {
@@ -44,7 +44,7 @@ public final class StringUtils {
                     }
                     buffer.append(c);
                 }
-                return buffer.toString() + chopedString;
+                return buffer.toString() + chopString;
             }
         }
     }
@@ -124,5 +124,46 @@ public final class StringUtils {
                 return src;
             }
         }
+    }
+
+    public static String getIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (decideIP(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (decideIP(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (decideIP(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (StringUtils.isNotNull(ip) && ip.contains(",")) {
+            ip = StringUtils.split(ip, ",")[0].replace(" ", "");
+        }
+        return ip;
+    }
+
+    private static Boolean decideIP(String ip) {
+        return ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip);
+    }
+
+    public static String[] split(String src, String delimiter) {
+        int maxParts = src.length() / delimiter.length() + 2;
+        int[] positions = new int[maxParts];
+        int delLen = delimiter.length();
+        int j = 0;
+        int count = 0;
+        int i;
+        for (positions[0] = -delLen; (i = src.indexOf(delimiter, j)) != -1; j = i + delLen) {
+            count++;
+            positions[count] = i;
+        }
+        count++;
+        positions[count] = src.length();
+        String[] result = new String[count];
+        for (i = 0; i < count; ++i) {
+            result[i] = src.substring(positions[i] + delLen, positions[i + 1]);
+        }
+        return result;
     }
 }

@@ -13,7 +13,7 @@ import org.hibernate.Query;
 import org.springframework.dao.DataAccessException;
 
 public final class DaoCommon {
-    public static List<?> getQueryResult(Object object, Pager pager, HibernateDataDAO hibernateDataDAO, String sqlString) {
+    public static <T> List<T> getQueryResult(T object, Pager pager, HibernateDataDAO hibernateDataDAO, String sqlString) {
         StringBuffer queryBuffer = new StringBuffer();
         String objectName = object.getClass().getName();
         queryBuffer.append("from ").append(objectName).append(" where 1=1 ");
@@ -24,7 +24,7 @@ public final class DaoCommon {
         Query query = hibernateDataDAO.getDAOSession().createQuery(queryBuffer.toString());
         setQueryValueForAccurateSearch(query, object);
         setQueryPager(query, pager);
-        return query.list();
+        return (List<T>) query.list();
     }
 
     public static Integer getQueryResultCount(Object object, HibernateDataDAO hibernateDataDAO, String sqlString) {
