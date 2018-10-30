@@ -68,7 +68,7 @@ public class IndexController extends BaseController {
     private void validatorCode(HttpServletRequest request) {
         String clientId = StringUtils.getParameter(request, "client-Id", "");
         Assert.isTrue(StringUtils.isNotNull(clientId), "client-Id is null");
-        GtLib gtSdk = new GtLib(GtConfig.getGtId(), GtConfig.getGtKey(), GtConfig.isNewFailBack());
+        GtLib gtSdk = new GtLib(GtConfig.gtId, GtConfig.gtKey, GtConfig.newFailBack);
         String challenge = request.getParameter(GtLib.fn_gt_challenge);
         String validate = request.getParameter(GtLib.fn_gt_validate);
         String secCode = request.getParameter(GtLib.fn_gt_sec_code);
@@ -97,7 +97,7 @@ public class IndexController extends BaseController {
 
     @RequestMapping("/gtRegister")
     public void start(HttpServletRequest request, HttpServletResponse response) {
-        GtLib gtSdk = new GtLib(GtConfig.getGtId(), GtConfig.getGtKey(), GtConfig.isNewFailBack());
+        GtLib gtSdk = new GtLib(GtConfig.gtId, GtConfig.gtKey, GtConfig.newFailBack);
         String clientId = StringUtils.getParameter(request, "client-Id", "");
         if (StringUtils.isNotNull(clientId)) {
             HashMap<String, String> param = new HashMap<>();
