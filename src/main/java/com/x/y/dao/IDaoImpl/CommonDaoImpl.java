@@ -16,8 +16,8 @@ public class CommonDaoImpl {
     @Autowired
     private HibernateDataDAO hibernateDataDAO;
 
-    public <T> T getEntityByUniqueKey(Class<T> clss, String fieldName, String fieldValue) {
-        String entityName = clss.getSimpleName();
+    public <T> T getEntityByUniqueKey(Class<T> objectClass, String fieldName, String fieldValue) {
+        String entityName = objectClass.getSimpleName();
         Query query = hibernateDataDAO.getDAOSession().createQuery("from " + entityName + " where " + fieldName + "=:" + fieldName);
         query.setParameter(fieldName, fieldValue);
         return (T) query.uniqueResult();
@@ -27,15 +27,15 @@ public class CommonDaoImpl {
         return DaoCommon.getQueryResult(object, pager, hibernateDataDAO, sqlString);
     }
 
-    public Integer getCountByObj(Object object, String sqlString) throws DataAccessException {
+    public int getCountByObj(Object object, String sqlString) throws DataAccessException {
         return DaoCommon.getQueryResultCount(object, hibernateDataDAO, sqlString);
     }
 
-    public List<?> getListForSearch(Object object, Pager pager, String sqlString) throws DataAccessException {
+    public <T> List<T> getListForSearch(T object, Pager pager, String sqlString) throws DataAccessException {
         return DaoCommon.getQueryResultForSearch(object, pager, hibernateDataDAO, sqlString);
     }
 
-    public Integer getCountForSearch(Object object, String sqlString) throws DataAccessException {
+    public int getCountForSearch(Object object, String sqlString) throws DataAccessException {
         return DaoCommon.getQueryResultCountForSearch(object, hibernateDataDAO, sqlString);
     }
 
@@ -59,7 +59,7 @@ public class CommonDaoImpl {
         hibernateDataDAO.getDAOTemplate().delete(entity);
     }
 
-    public <T> T queryEntityById(Serializable id, Class<T> t) throws DataAccessException {
-        return hibernateDataDAO.getDAOTemplate().get(t, id);
+    public <T> T queryEntityById(Serializable id, Class<T> objectClass) throws DataAccessException {
+        return hibernateDataDAO.getDAOTemplate().get(objectClass, id);
     }
 }

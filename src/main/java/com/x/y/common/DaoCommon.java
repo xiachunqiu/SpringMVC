@@ -27,7 +27,7 @@ public final class DaoCommon {
         return (List<T>) query.list();
     }
 
-    public static Integer getQueryResultCount(Object object, HibernateDataDAO hibernateDataDAO, String sqlString) {
+    public static int getQueryResultCount(Object object, HibernateDataDAO hibernateDataDAO, String sqlString) {
         StringBuffer queryBuffer = new StringBuffer();
         String objectName = object.getClass().getName();
         queryBuffer.append("select count(*) from ").append(objectName).append(" where 1=1 ");
@@ -37,11 +37,10 @@ public final class DaoCommon {
         }
         Query query = hibernateDataDAO.getDAOSession().createQuery(queryBuffer.toString());
         setQueryValueForAccurateSearch(query, object);
-        Long count = (Long) query.uniqueResult();
-        return count.intValue();
+        return (int) query.uniqueResult();
     }
 
-    public static List<?> getQueryResultForSearch(Object object, Pager pager, HibernateDataDAO hibernateDataDAO, String sqlString) {
+    public static <T> List<T> getQueryResultForSearch(T object, Pager pager, HibernateDataDAO hibernateDataDAO, String sqlString) {
         StringBuffer queryBuffer = new StringBuffer();
         String objectName = object.getClass().getName();
         queryBuffer.append("from ").append(objectName).append(" where 1=1 ");
@@ -52,10 +51,10 @@ public final class DaoCommon {
         Query query = hibernateDataDAO.getDAOSession().createQuery(queryBuffer.toString());
         setQueryValueForStringSearch(query, object);
         setQueryPager(query, pager);
-        return query.list();
+        return (List<T>) query.list();
     }
 
-    public static Integer getQueryResultCountForSearch(Object object, HibernateDataDAO hibernateDataDAO, String sqlString) {
+    public static int getQueryResultCountForSearch(Object object, HibernateDataDAO hibernateDataDAO, String sqlString) {
         StringBuffer queryBuffer = new StringBuffer();
         String objectName = object.getClass().getName();
         queryBuffer.append("select count(*) from ").append(objectName).append(" where 1=1 ");
@@ -65,8 +64,7 @@ public final class DaoCommon {
         }
         Query query = hibernateDataDAO.getDAOSession().createQuery(queryBuffer.toString());
         setQueryValueForStringSearch(query, object);
-        Long count = (Long) query.uniqueResult();
-        return count.intValue();
+        return (int) query.uniqueResult();
     }
 
     private static void setQueryBufferForStringSearch(StringBuffer queryBuffer, Object object) {
@@ -286,9 +284,6 @@ public final class DaoCommon {
         if (pager != null) {
             query.setFirstResult(pager.getStartPos());
             query.setMaxResults(pager.getPageSize());
-        } else {
-            query.setFirstResult(0);
-            query.setMaxResults(12);
         }
     }
 }

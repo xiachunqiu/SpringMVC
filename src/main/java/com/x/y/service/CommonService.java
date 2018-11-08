@@ -9,8 +9,8 @@ import java.util.List;
 
 @Service
 public class CommonService extends BaseService {
-    public <T> T getEntityByUniqueKey(Class<T> clss, String fieldName, String fieldValue) {
-        return super.getCommonDao().getEntityByUniqueKey(clss, fieldName, fieldValue);
+    public <T> T getEntityByUniqueKey(Class<T> objectClass, String fieldName, String fieldValue) {
+        return super.getCommonDao().getEntityByUniqueKey(objectClass, fieldName, fieldValue);
     }
 
     public void addEntity(Object entity) throws DataAccessException {
@@ -33,11 +33,11 @@ public class CommonService extends BaseService {
         super.getCommonDao().deleteEntity(entity);
     }
 
-    public <T> T getEntityById(Serializable id, Class<T> clss) throws DataAccessException {
-        return super.getCommonDao().queryEntityById(id, clss);
+    public <T> T getEntityById(Serializable id, Class<T> objectClass) throws DataAccessException {
+        return super.getCommonDao().queryEntityById(id, objectClass);
     }
 
-    public List<?> getListByObj(Object object, Pager pager, String sqlString) throws DataAccessException {
+    public <T> List<T> getListByObj(T object, Pager pager, String sqlString) throws DataAccessException {
         return super.getCommonDao().getListByObj(object, pager, sqlString);
     }
 
@@ -45,27 +45,27 @@ public class CommonService extends BaseService {
         return super.getCommonDao().getListByObj(object, pager, null);
     }
 
-    public Integer getCountByObj(Object object, String sqlString) throws DataAccessException {
+    public int getCountByObj(Object object, String sqlString) throws DataAccessException {
         return super.getCommonDao().getCountByObj(object, sqlString);
     }
 
-    public Integer getCountByObj(Object object) throws DataAccessException {
+    public int getCountByObj(Object object) throws DataAccessException {
         return super.getCommonDao().getCountByObj(object, null);
     }
 
-    public List<?> getListForSearch(Object object, Pager pager, String sqlString) throws DataAccessException {
+    public <T> List<T> getListForSearch(T object, Pager pager, String sqlString) throws DataAccessException {
         return super.getCommonDao().getListForSearch(object, pager, sqlString);
     }
 
-    public List<?> getListForSearch(Object object, Pager pager) throws DataAccessException {
+    public <T> List<T> getListForSearch(T object, Pager pager) throws DataAccessException {
         return super.getCommonDao().getListForSearch(object, pager, null);
     }
 
-    public Integer getCountForSearch(Object object, String sqlString) throws DataAccessException {
+    public int getCountForSearch(Object object, String sqlString) throws DataAccessException {
         return super.getCommonDao().getCountForSearch(object, sqlString);
     }
 
-    public Integer getCountForSearch(Object object) throws DataAccessException {
+    public int getCountForSearch(Object object) throws DataAccessException {
         return super.getCommonDao().getCountForSearch(object, null);
     }
 }
