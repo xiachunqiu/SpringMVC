@@ -14,8 +14,9 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resource/**" />
             <mvc:exclude-mapping path="/favicon.ico"/>
-            <bean class="com.x.y.interceptor.MyInterceptor"/>
+            <bean class="com.x.y.interceptor.LogInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
     <mvc:annotation-driven conversion-service="conversionService"/>
