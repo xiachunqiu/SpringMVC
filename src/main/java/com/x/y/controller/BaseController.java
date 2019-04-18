@@ -4,7 +4,6 @@ package com.x.y.controller;
 import com.x.y.common.Constants;
 import com.x.y.common.Pager;
 import com.x.y.domain.User;
-import com.x.y.mongodb.service.CommonMongodbService;
 import com.x.y.processor.IProcessor;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +23,6 @@ public class BaseController {
     private ThreadPoolTaskExecutor threadPool;
     @Autowired
     private CommonService commonService;
-    @Autowired
-    private CommonMongodbService commonMongodbService;
 
     User getCurrentUser(HttpServletRequest request) {
         Object object = request.getSession().getAttribute(Constants.USER_SESSION_KEY);

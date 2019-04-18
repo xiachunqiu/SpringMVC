@@ -25,6 +25,6 @@ public class TestProcessor extends BaseController implements IProcessor, Job {
 
     @Override
     public void process() {
-        log.info("testProcesser定时任务执行：" + testProcesser.getCommonMongodbService().getTodayTaskRecordRepository().count());
+        log.info("testProcesser定时任务执行:" + testProcesser.getCommonService().getClass().getName());
     }
 }
